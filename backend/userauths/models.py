@@ -1,6 +1,4 @@
 from django.db import models
-
-# Create your models here.
 from django.contrib.auth.models import AbstractUser
 
 
@@ -17,11 +15,19 @@ class User(AbstractUser):
         return self.email
 
     def save(self, *args, **kwargs):
-        email_username, full_name = self.email.split('@')[0]
-        if self.full_name == "" or self.full_name is None:
+        # Extract username from email
+        if self.email and '@' in self.email:
+            email_username = self.email.split('@')[0]
+        else:
+            email_username = self.email  # fallback if email is malformed
+
+        # Auto-fill username and full_name if not provided
+        if not self.full_name:
             self.full_name = email_username
-        if self.username == "" or self.username is None:
+
+        if not self.username:
             self.username = email_username
+
         super(User, self).save(*args, **kwargs)
 
 
@@ -34,12 +40,9 @@ class Profile(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        if self.full_name:
-            return str(self.full_name)
-        else:
-            return str(self.user.full_name)
+        return self.full_name if self.full_name else self.user.full_name
 
     def save(self, *args, **kwargs):
-        if self.full_name == "" or self.full_name is None:
+        if not self.full_name:
             self.full_name = self.user.username
         super(Profile, self).save(*args, **kwargs)
