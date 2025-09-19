@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from datetime import timedelta
 import os
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@0+(_*_637_hmkqom^53@pm@9$2hlgx-)9_kx&x7f1@k57y22t'
+SECRET_KEY = 'django-insecure-76jm^e85uf^r#6vwzisnr-6z9byt*_jd48pf5m-_b$ku5$)fu$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,15 +42,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # apps
+    # Local apps
     'core',
     'userauths',
     'api',
 
-    # third party apps
+    # Third-party apps
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
+
 ]
 
 MIDDLEWARE = [
@@ -130,14 +131,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
+STATIC_FILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = BASE_DIR / 'templates'
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'userauths.User'
 
@@ -147,42 +146,42 @@ AUTH_USER_MODEL = 'userauths.User'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Douglous Lms Admin",
-    "site_header": "Douglous Lms",
-    "site_brand": "Douglous Lms",
-    "show_ui_builder": False,
-    "welcome_sign": "Welcome to Douglous Lms Admin",
-    "copyright": "Douglous Lms Ltd",
-
-
+    "site_title": "Douglous LMS Admin",
+    "site_header": "Douglous LMS",
+    "site_brand": "Douglous LMS",
+    # "site_logo": "path-to-logo",
+    "welcome_sign": "Welcome to the Douglous LMS",
+    "copyright": "Douglous LMS Ltd",
+    "show_ui_builder": True,
 
 }
 
+
 JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": True,
-    "footer_small_text": True,
-    "body_small_text": False,
-    "brand_small_text": True,
-    "brand_colour": False,
-    "accent": "accent-primary",
-    "navbar": "navbar-dark",
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": True,
+    "brand_small_text": False,
+    "brand_colour": "navbar-indigo",
+    "accent": "accent-danger",
+    "navbar": "navbar-indigo navbar-dark",
     "no_navbar_border": False,
     "navbar_fixed": False,
     "layout_boxed": False,
     "footer_fixed": False,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-primary",
-    "sidebar_nav_small_text": True,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-indigo",
+    "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": True,
-    "sidebar_nav_compact_style": True,
-    "sidebar_nav_legacy_style": True,
-    "sidebar_nav_flat_style": True,
-    "theme": "darkly",
-    "dark_mode_theme": "solar",
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": None,
     "button_classes": {
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
         "info": "btn-info",
         "warning": "btn-warning",
         "danger": "btn-danger",
@@ -190,7 +189,16 @@ JAZZMIN_UI_TWEAKS = {
     }
 }
 
-# JWT Authentication
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # Optional
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
